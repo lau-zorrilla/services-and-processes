@@ -15,15 +15,16 @@ class ThreadPool
     Thread.new do
       # Wait for space in the pool
       @pool_mutex.synchronize do
-        print "Pool is full; waiting to run #{args.join(',')}...\n" if $DEBUG
-        # Sleep until some other thread calls @pool_cv.signal.
-	@pool_cv.wait(@pool_mutex)
+        while @pool.size >= @max_size
+          print "Pool is full; waiting to run #{args.join(',')}...\n" if $DEBUG
+          # Sleep until some other thread calls @pool_cv.signal.
+  	  @pool_cv.wait(@pool_mutex)
+        end
       end
-    end
 
-    @pool << Thread.current
-    begin
-      yield(*args)
+      @pool << Thread.current
+      begin
+        yield(*args)
       rescue => e
         exception(self, e, *args)
       ensure
@@ -33,6 +34,7 @@ class ThreadPool
           # Signal the next waiting thread that there's a space in the pool.
           @pool_cv.signal
         end
+      end
     end
   end
 
@@ -49,10 +51,10 @@ end
 $DEBUG = true
 pool = ThreadPool.new(3)
 
-1.upto(5) do |i|
+1.upto(2000) do |i|
   pool.dispatch(i) do |i|
     print "Job #{i} started.\n"
-    sleep(5-i)
+    sleep(100-i)
     print "Job #{i} completed.\n"
   end
 end

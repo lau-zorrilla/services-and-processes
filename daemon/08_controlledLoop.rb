@@ -47,7 +47,7 @@ class PausableCounter < LoopingThread
   end
 end
 
-counter = PasableCounter.new
+counter = PausableCounter.new
 sleep 2
 counter.paused = true
 counter.count
@@ -57,13 +57,4 @@ counter.paused = false
 sleep 2
 counter.stop
 counter.count
-
-
-
-
-
-
-
-
-
 

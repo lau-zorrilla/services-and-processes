@@ -4,7 +4,7 @@
 module Enumerable
   def each_simultaneously
     threads = []
-    each { |e| threads << Threads.new { yield e } }
+    each { |e| threads << Thread.new { yield e } }
     return threads
   end
 end

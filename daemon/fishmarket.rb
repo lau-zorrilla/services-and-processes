@@ -16,8 +16,8 @@ end
 fishmonger = Thread.new do
   1.upto(10) {
     sleep 2
-    puts "Cliente #{j} atendido"
-    puts "Proximo cliente: #{j + 1}"
+    puts "Cliente #{i} atendido"
+    puts "Proximo cliente: #{i + 1}"
     j += 1
   }
 end

@@ -2,27 +2,12 @@
 # fishmarket.rb
 
 require 'thread'
-
-class Client
-
-  @@total_clients = 0
-
-   def initialize
-      @@total_clients += 1
-      @ticket = @@total_clients
-      puts "Cliente creado. Me han dado el ticket #{@ticket}."
-   end
-
-   def served
-      puts "Client numbered #{@ticket} is served."
-   end
-
-end
-
+require_relative 'class_client'
 
 clients = []
 mutex = Mutex.new
 number_of_clients_semaphore = ConditionVariable.new
+
 
 clienter = Thread.new do
    while 1 do  
@@ -37,7 +22,7 @@ end
     mutex.synchronize do
       sleep rand(5)
       number_of_clients_semaphore.wait(mutex)
-      clients.shift.served # shift quita el primer elemento y desplaza a todos los demas.
+      clients.shift.served # shift quita el primer elemento y desplaza a todos los demas a la izquierda.
     end
   end
 
